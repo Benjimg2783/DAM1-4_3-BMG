@@ -16,7 +16,7 @@ data class Tienda(val nombre: String, val clientes: List<Clientes>) {
         clientes.flatMap { it.pedidos }.flatMap { it.productos }.toSet()
 
     fun obtenerProductosPedidosPorTodos(): Set<Producto> =
-        clientes.flatMap { it.pedidos }.flatMap { it.productos }.toSet()
+        clientes.fold(obtenerProductosPedidos()){acc, cliente -> acc.intersect(cliente.pedidos.flatMap { it.productos }.toSet()) }
 
     fun obtenerNumeroVecesProductoPedido(producto: Producto): Int = clientes.flatMap { cliente->cliente.pedidos.flatMap { it.productos} }.count{it==producto}
     fun agrupaClientesPorCiudad(): Map<Ciudad, List<Clientes>> = clientes.groupBy { it.ciudad }
